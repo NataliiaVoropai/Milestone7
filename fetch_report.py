@@ -1,6 +1,25 @@
 import requests
 import sys
 
+valid_months = ["january", "february", "march", "april", "may", "june", "july",
+                "august", "september", "october", "november", "december"]
+valid_departments = ["engineering", "hr", "finance", "r&d", "marketing",
+                     "management", "tech support"]
+
+
+def normalize_validate_args(month, department):
+    month_ = month.lower()
+    department_ = department.lower()
+    if month_ not in valid_months:
+        print(f'Error: "{month}" is not a valid month. Please enter '
+              'a correct month.')
+        sys.exit(1)
+    if department_ not in valid_departments:
+        print(f'Error: "{department}" is not a valid department. Please check '
+              'spelling')
+        sys.exit(1)
+    return month_, department_
+        
 
 def fetch_report(month, department):
     base_url = 'http://127.0.0.1:5000'
@@ -29,7 +48,7 @@ def print_report(data, department, month, report_type):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print('Usage: python3 fetch_report.py <month> <department>')
-    else:
-        month, department = sys.argv[1], sys.argv[2]
-        fetch_report(month, department)
+        print("Usage: python fetch_report.py <month> <department>")
+        sys.exit(1)
+    month, department = normalize_validate_args(sys.argv[1], sys.argv[2])
+    fetch_report(month, department)
